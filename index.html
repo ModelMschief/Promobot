@@ -1,134 +1,131 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Promoter Bot & Link Tracker</title>
     
-    <!-- Tailwind CSS, Google Fonts, and Chart.js -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display-swap" rel="stylesheet">
 
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass-nav { 
-            backdrop-filter: blur(12px) saturate(180%); 
-            -webkit-backdrop-filter: blur(12px) saturate(180%);
-            background-color: rgba(255, 255, 255, 0.75);
-        }
-        .dark .glass-nav {
-             background-color: rgba(15, 23, 42, 0.75);
-        }
-        .view {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-        .view.hidden {
-            opacity: 0;
-            transform: scale(0.98);
-            pointer-events: none;
-            position: absolute;
-            width: 100%;
-        }
-        .table-container { overflow-x: auto; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #555; }
-        #mobile-menu { transition: transform 0.3s ease-in-out; }
-    </style>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
+<body>
+    <canvas id="bg-canvas"></canvas>
 
-    <!-- Header & Navigation -->
-    <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 dark:border-slate-700/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <button id="home-view-btn" class="font-bold text-xl text-slate-900 dark:text-white">Promoter Bot</button>
+    <!-- Header -->
+    <header class="glass-header">
+        <div class="container">
+            <div class="flex items-center justify-between">
+                <button id="home-view-btn" class="logo">Promoter Bot</button>
                 
-                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
-                    <button id="tracker-view-btn" class="flex items-center gap-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">🔗 Link Tracker</button>
-                    <a href="#features" class="stand-bot-nav hover:text-indigo-600 dark:hover:text-indigo-400">Features</a>
-                    <a href="#premium" class="stand-bot-nav hover:text-indigo-600 dark:hover:text-indigo-400">Premium</a>
-                    <a href="#how" class="stand-bot-nav hover:text-indigo-600 dark:hover:text-indigo-400">How it Works</a>
-                    <a href="#privacy" class="stand-bot-nav hover:text-indigo-600 dark:hover:text-indigo-400">Privacy</a>
+                <nav class="desktop-nav flex items-center gap-6">
+                    <button id="tracker-view-btn">🔗 Link Tracker</button>
+                    <a href="#features" class="stand-bot-nav">Features</a>
+                    <a href="#premium" class="stand-bot-nav">Premium</a>
+                    <a href="#how" class="stand-bot-nav">How it Works</a>
+                    <a href="#privacy" class="stand-bot-nav">Privacy</a>
                 </nav>
 
-                <div class="flex items-center gap-2">
-                     <span id="user-display" class="hidden text-sm font-medium text-slate-600 dark:text-slate-400"></span>
-                     <button id="logout-button" class="hidden text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Logout</button>
-                    <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700"></button>
+                <div class="flex items-center gap-4">
+                     <span id="user-display" class="hidden text-sm font-bold text-primary"></span>
+                     <button id="logout-button" class="hidden text-sm font-bold text-muted hover:text-danger">Logout</button>
                     
-                    <div class="md:hidden">
-                        <button id="mobile-menu-button" class="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
-                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <button id="themeToggle" class="btn-icon">
+                        <!-- Icon injected by JS -->
+                    </button>
 
-        <div id="mobile-menu" class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden">
-            <div class="fixed top-0 right-0 h-full w-64 bg-white dark:bg-slate-800 shadow-lg p-5 transform translate-x-full">
-                <div class="flex justify-end mb-4"><button id="close-mobile-menu" class="p-2"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div>
-                <nav class="flex flex-col space-y-4 text-lg">
-                    <button id="mobile-tracker-view-btn" class="text-left">🔗 Link Tracker</button>
-                    <a href="#features" class="mobile-stand-bot-nav">Features</a>
-                    <a href="#premium" class="mobile-stand-bot-nav">Premium</a>
-                    <a href="#how" class="mobile-stand-bot-nav">How it Works</a>
-                    <a href="#privacy" class="mobile-stand-bot-nav">Privacy</a>
-                </nav>
+                    <button id="mobile-menu-button" class="btn-icon">
+                        <svg class="w-6 h-6" style="width: 24px; height: 24px;" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="relative">
-        <div id="stand-bot-view" class="view">
-            <section id="home" class="py-14 sm:py-20 px-4">
-                <div class="max-w-6xl mx-auto text-center">
-                    <h1 class="text-4xl sm:text-6xl font-extrabold leading-tight text-slate-900 dark:text-white">Boost your Telegram with <span class="text-indigo-600">Promoter Bot</span></h1>
-                    <p class="mt-4 max-w-2xl mx-auto text-lg text-slate-700 dark:text-slate-300">Auto-promote your link, earn referral credits, and unlock premium tools to grow your audience.</p>
-                    <div class="mt-8 flex flex-wrap justify-center gap-4">
-                        <a id="ctaStart" href="https://t.me/anoni67_bot?start=start" class="px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold shadow-lg hover:bg-indigo-700 transition">🚀 Promoter Bot</a>
-                        <a id="ctaClone" href="https://t.me/chosentwo_bot?start=clone" class="px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold shadow-lg hover:bg-indigo-700 transition">🤖 Get my clone</a>
-                        <a id="ctaGroup" href="https://t.me/anoni67_bot?startgroup=addme" class="px-6 py-3 rounded-xl bg-slate-800 text-white dark:bg-slate-700 hover:bg-black dark:hover:bg-slate-600 transition">➕ Add to Group</a>
-                        <button id="ctaTrackLink" class="px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition">🔗 Track a Link</button>
-                    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu">
+        <div class="menu-content">
+            <div class="flex justify-between items-center mb-4">
+                <span class="font-bold text-lg">Menu</span>
+                <button id="close-mobile-menu" class="btn-icon">
+                    <svg class="w-6 h-6" style="width: 24px; height: 24px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <button id="mobile-tracker-view-btn" class="text-left font-medium">🔗 Link Tracker</button>
+            <a href="#features" class="mobile-stand-bot-nav">Features</a>
+            <a href="#premium" class="mobile-stand-bot-nav">Premium</a>
+            <a href="#how" class="mobile-stand-bot-nav">How it Works</a>
+            <a href="#privacy" class="mobile-stand-bot-nav">Privacy</a>
+        </div>
+    </div>
+
+    <main>
+        <!-- Promoter Bot View -->
+        <div id="stand-bot-view" class="view active">
+            <section id="home" class="hero container">
+                <h1>Boost your Telegram with <span>Promoter Bot</span></h1>
+                <p>Auto-promote your link, earn referral credits, and unlock premium tools to grow your audience.</p>
+                <div class="flex justify-center flex-wrap gap-4">
+                    <a id="ctaStart" href="https://t.me/anoni67_bot?start=start" class="btn btn-primary">🚀 Promoter Bot</a>
+                    <a id="ctaClone" href="https://t.me/chosentwo_bot?start=clone" class="btn btn-primary">🤖 Get my clone</a>
+                    <a id="ctaGroup" href="https://t.me/anoni67_bot?startgroup=addme" class="btn btn-dark">➕ Add to Group</a>
+                    <button id="ctaTrackLink" class="btn btn-secondary">🔗 Track a Link</button>
                 </div>
             </section>
 
-            <section id="features" class="py-14 sm:py-20 bg-slate-100 dark:bg-slate-950/50 px-4">
-                <div class="max-w-6xl mx-auto">
-                    <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Powerful Features</h2>
-                    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg"><h3 class="font-semibold mb-1">📢 Auto Promotion</h3><p class="text-sm text-slate-600 dark:text-slate-400">Reach <b>15</b> unique users per promotion.</p></div>
-                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg"><h3 class="font-semibold mb-1">📢 Auto Promotion to Groups</h3><p class="text-sm text-slate-600 dark:text-slate-400">Reach <b>multiple super Groups</b> per promotion.</p></div>
-                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg"><h3 class="font-semibold mb-1">⏳ Daily Credits</h3><p class="text-sm text-slate-600 dark:text-slate-400"><b>4</b> free promotions every day.</p></div>
-                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg"><h3 class="font-semibold mb-1">👥 Referral Rewards</h3><p class="text-sm text-slate-600 dark:text-slate-400">3 referrals = <b>+4</b> extra promotions.</p></div>
-                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg cursor-pointer hover:ring-2 ring-indigo-500 transition" id="tracker-feature-card"><h3 class="font-semibold mb-1">🔗 Free Link Tracker</h3><p class="text-sm text-slate-600 dark:text-slate-400">Shorten & track clicks on your links. Click to try!</p></div>
+            <section id="features" class="container">
+                <h2 class="text-center mb-4">Powerful Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>📢 Auto Promotion</h3>
+                        <p class="text-muted">Reach <b>15</b> unique users per promotion.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📢 Auto Groups</h3>
+                        <p class="text-muted">Reach <b>multiple super Groups</b> per promotion.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>⏳ Daily Credits</h3>
+                        <p class="text-muted"><b>4</b> free promotions every day.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>👥 Referral Rewards</h3>
+                        <p class="text-muted">3 referrals = <b>+4</b> extra promotions.</p>
+                    </div>
+                    <div class="feature-card" id="tracker-feature-card" style="cursor: pointer; border-color: var(--primary-color);">
+                        <h3 class="text-primary">🔗 Free Link Tracker</h3>
+                        <p class="text-muted">Shorten & track clicks on your links. Click to try!</p>
                     </div>
                 </div>
             </section>
             
-            <section id="premium" class="py-14 sm:py-20 px-4">
-                 <div class="max-w-4xl mx-auto text-center">
-                    <h2 class="text-3xl sm:text-4xl font-bold mb-4">⭐ Go Premium</h2>
-                    <p class="text-slate-600 dark:text-slate-400 mb-8">Unlock <b>/picbroad</b> to message 250 users/day & get <b>10x ChatPromo</b> daily.</p>
-                     <div class="grid sm:grid-cols-3 gap-6 text-left">
-                        <div class="p-6 rounded-2xl shadow-lg bg-white dark:bg-slate-800"><h3 class="font-semibold text-lg">1 Week</h3><div class="text-3xl font-extrabold mt-2">₹30 <span class="text-sm opacity-80">/ 15⭐</span></div></div>
-                        <div class="p-6 rounded-2xl shadow-lg bg-white dark:bg-slate-800 border-2 border-indigo-500"><h3 class="font-semibold text-lg">3 Weeks</h3><div class="text-3xl font-extrabold mt-2">₹75 <span class="text-sm opacity-80">/ 38⭐</span></div></div>
-                        <div class="p-6 rounded-2xl shadow-lg bg-white dark:bg-slate-800"><h3 class="font-semibold text-lg">1 Month</h3><div class="text-3xl font-extrabold mt-2">₹89 <span class="text-sm opacity-80">/ 45⭐</span></div></div>
+            <section id="premium" class="container text-center py-20">
+                <h2>⭐ Go Premium</h2>
+                <p class="text-muted">Unlock <b>/picbroad</b> to message 250 users/day & get <b>10x ChatPromo</b> daily.</p>
+
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>1 Week</h3>
+                        <div class="price-tag">₹30 <span style="font-size: 1rem; opacity: 0.7;">/ 15⭐</span></div>
                     </div>
-                    <a id="ctaPremium" href="https://t.me/chosentwo_bot" class="inline-block mt-8 px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition">💬 Pay / Support</a>
+                    <div class="pricing-card featured">
+                        <h3 class="text-primary">3 Weeks</h3>
+                        <div class="price-tag">₹75 <span style="font-size: 1rem; opacity: 0.7;">/ 38⭐</span></div>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>1 Month</h3>
+                        <div class="price-tag">₹89 <span style="font-size: 1rem; opacity: 0.7;">/ 45⭐</span></div>
+                    </div>
                 </div>
+                <a id="ctaPremium" href="https://t.me/chosentwo_bot" class="btn btn-secondary mt-8">💬 Pay / Support</a>
             </section>
 
-             <section id="how" class="py-16 sm:py-24 bg-slate-100 dark:bg-slate-950/50">
-                <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 class="text-center text-3xl font-bold tracking-tight sm:text-4xl">🛠️ How It Works</h2>
-                    <ol class="mt-8 space-y-4 list-decimal list-inside text-slate-600 dark:text-slate-300 marker:text-indigo-600 marker:font-bold">
+             <section id="how" class="container py-20">
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <h2 class="text-center">🛠️ How It Works</h2>
+                    <ol class="mt-8" style="list-style-position: inside; color: var(--text-muted); font-size: 1.1rem; line-height: 2;">
                         <li>Start the bot and submit your promotion link (with optional text).</li>
                         <li>Use the <code>/promote</code> command or menu buttons to send your link to other users.</li>
                         <li>Share your unique referral link to earn bonus promotions: <b>3 referrals = +4 promotions</b>.</li>
@@ -136,318 +133,122 @@
                 </div>
             </section>
 
-            <section id="privacy" class="py-16 sm:py-24">
-                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 class="text-center text-3xl font-bold tracking-tight sm:text-4xl">Our Promise & Your Responsibility</h2>
-                    <div class="mt-8 grid md:grid-cols-2 gap-8">
-                        <div class="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800">
-                            <h3 class="font-semibold text-lg text-emerald-800 dark:text-emerald-300">🔒 Privacy First</h3>
-                            <p class="mt-1 text-sm text-emerald-700 dark:text-emerald-400">We only store your Telegram ID and link data required to deliver promotions. Your data is never sold or shared with third parties. Period.</p>
-                        </div>
-                        <div class="p-6 rounded-2xl bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800">
-                            <h3 class="font-semibold text-lg text-amber-800 dark:text-amber-300">⚠️ A Word of Caution</h3>
-                            <p class="mt-1 text-sm text-amber-700 dark:text-amber-400">Growth and engagement are not guaranteed. Our bot connects you with real users, but results depend on the quality of your content.</p>
-                        </div>
+            <section id="privacy" class="container py-20">
+                <h2 class="text-center">Our Promise & Your Responsibility</h2>
+                <div class="features-grid mt-8">
+                    <div class="glass-panel p-6" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2);">
+                        <h3 style="color: #10b981;">🔒 Privacy First</h3>
+                        <p style="color: #047857;">We only store your Telegram ID and link data required to deliver promotions. Your data is never sold or shared with third parties. Period.</p>
+                    </div>
+                    <div class="glass-panel p-6" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2);">
+                        <h3 style="color: #f59e0b;">⚠️ A Word of Caution</h3>
+                        <p style="color: #b45309;">Growth and engagement are not guaranteed. Our bot connects you with real users, but results depend on the quality of your content.</p>
                     </div>
                 </div>
             </section>
         </div>
 
-        <div id="link-tracker-view" class="view hidden">
-            <section id="login-section" class="max-w-md mx-auto py-12 px-4">
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl">
-                    <h2 class="text-2xl font-bold text-center">Link Tracker Login</h2>
-                    <p class="text-center mt-2 text-sm text-slate-600 dark:text-slate-400">Enter your Telegram User ID to manage your links. <a style="color: blue;" href="https://t.me/testovila_bot">Get ID</a> Or simple <b>New Password</b></p>
-                    <div class="mt-6 space-y-4">
-                        <input type="text" id="user-id" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md" placeholder="e.g., 7097744702">
-                        <button id="login-button" class="w-full py-3 px-4 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700">Login</button>
+        <!-- Link Tracker View -->
+        <div id="link-tracker-view" class="view">
+            <!-- Login -->
+            <section id="login-section" class="container" style="max-width: 500px; padding-top: 4rem;">
+                <div class="glass-panel" style="padding: 3rem;">
+                    <h2 class="text-center">Link Tracker Login</h2>
+                    <p class="text-center text-muted">Enter your Telegram User ID to manage your links. <a href="https://t.me/testovila_bot" class="text-primary">Get ID</a></p>
+                    <div class="flex flex-col gap-4 mt-8">
+                        <input type="text" id="user-id" placeholder="e.g., 7097744702">
+                        <button id="login-button" class="btn btn-primary">Login</button>
                     </div>
-                    <div id="login-error" class="mt-4 text-center text-sm text-red-500"></div>
+                    <div id="login-error" class="text-center mt-4" style="color: var(--danger-color);"></div>
                 </div>
             </section>
 
-            <section id="dashboard-section" class="hidden max-w-7xl mx-auto py-12 px-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg"><h3 class="text-sm font-medium">Total Links</h3><p id="total-links" class="mt-1 text-3xl font-semibold">0</p></div>
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg"><h3 class="text-sm font-medium">Total Clicks</h3><p id="total-clicks" class="mt-1 text-3xl font-semibold">0</p></div>
+            <!-- Dashboard -->
+            <section id="dashboard-section" class="hidden container py-20">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h3 class="text-muted text-sm uppercase">Total Links</h3>
+                        <p id="total-links" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="text-muted text-sm uppercase">Total Clicks</h3>
+                        <p id="total-clicks" class="stat-value">0</p>
+                    </div>
                 </div>
-                <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-1"><div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg"><h3 class="text-lg font-semibold mb-4">Create new link</h3><input type="url" id="original-link" class="mt-1 block w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border rounded-md" placeholder="https://example.com"><button id="create-link-button" class="w-full mt-4 py-3 px-4 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700">Generate</button><div id="new-link-display" class="mt-4 hidden p-3 bg-indigo-50 dark:bg-slate-700 rounded-md"><input type="text" id="new-short-link" class="w-full bg-transparent font-mono text-sm" readonly></div></div></div>
-                    <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg"><h3 class="font-semibold mb-2">Top 5 Links by Clicks</h3><canvas id="clicks-chart"></canvas></div>
+
+                <div class="dashboard-grid mt-8" style="grid-template-columns: 1fr 2fr;">
+                    <div>
+                        <div class="glass-panel p-6">
+                            <h3>Create new link</h3>
+                            <div class="input-group">
+                                <input type="url" id="original-link" placeholder="https://example.com">
+                            </div>
+                            <button id="create-link-button" class="btn btn-primary" style="width: 100%;">Generate</button>
+
+                            <div id="new-link-display" class="hidden generated-link-box">
+                                <input type="text" id="new-short-link" readonly style="background: transparent; border: none; font-family: monospace; width: 100%; color: var(--primary-color);">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6">
+                        <h3>Top 5 Links by Clicks</h3>
+                        <canvas id="clicks-chart" style="max-height: 300px;"></canvas>
+                    </div>
                 </div>
-                <div class="mt-8 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg">
-                     <h3 class="font-semibold mb-4">Your Links</h3>
-                     <div class="table-container">
-                        <table class="min-w-full"><thead class="bg-slate-50 dark:bg-slate-700"><tr><th class="px-6 py-3 text-left text-xs font-medium uppercase">Short Link</th><th class="px-6 py-3 text-left text-xs font-medium uppercase">Original</th><th class="px-6 py-3 text-left text-xs font-medium uppercase">Clicks</th><th class="px-6 py-3 text-left text-xs font-medium uppercase">Created</th><th class="px-6 py-3 text-left text-xs font-medium uppercase">Actions</th></tr></thead><tbody id="links-table-body"></tbody></table>
+
+                <div class="glass-panel mt-8 p-6">
+                     <h3 class="mb-4">Your Links</h3>
+                     <div class="table-responsive">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr>
+                                    <th>Short Link</th>
+                                    <th>Original</th>
+                                    <th>Clicks</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="links-table-body"></tbody>
+                        </table>
                     </div>
                 </div>
             </section>
         </div>
-        <div id="loading-spinner" class="hidden fixed inset-0 bg-black/20 z-50 flex items-center justify-center"><div class="w-12 h-12 border-4 border-white border-t-indigo-500 rounded-full animate-spin"></div></div>
+
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="spinner-overlay hidden">
+            <div class="spinner"></div>
+        </div>
     </main>
     
-    <footer id="contact" class="bg-slate-900/95 text-slate-400 py-8 text-center mt-12">
-        <h3 class="font-bold text-xl text-white">Get in Touch</h3>
-        <p class="mt-2 text-slate-400">For questions, payment support, or custom bot inquiries.</p>
-        <div class="mt-4 flex justify-center gap-4">
-            <a href="https://t.me/chosentwo_bot" class="px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-semibold shadow-sm hover:bg-indigo-700">Contact Admin</a>
+    <footer>
+        <div class="container text-center">
+            <h3>Get in Touch</h3>
+            <p>For questions, payment support, or custom bot inquiries.</p>
+            <div class="mt-4">
+                <a href="https://t.me/chosentwo_bot" class="btn btn-primary">Contact Admin</a>
+            </div>
+            <div class="mt-8">
+                <a href="terms.html" class="text-muted hover:text-primary">Terms and Conditions</a>
+            </div>
+            <p class="mt-4 text-sm opacity-50">&copy; 2025 Promoter Bot & Link Tracker. All rights reserved.</p>
         </div>
-        <p class="mt-8 text-sm">&copy; 2025 Promoter Bot & Link Tracker. All rights reserved.</p>
     </footer>
     
     <!-- Confirmation Modal -->
-    <div id="confirmation-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg max-w-sm w-full p-6 text-center">
-            <h3 class="text-lg font-bold">Are you sure?</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">This link will be permanently deleted. This action cannot be undone.</p>
-            <div class="mt-6 flex justify-center gap-4">
-                <button id="cancel-delete-btn" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600">Cancel</button>
-                <button id="confirm-delete-btn" class="px-4 py-2 rounded-lg bg-red-600 text-white">Delete</button>
+    <div id="confirmation-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h3 class="text-center mb-4">Are you sure?</h3>
+            <p class="text-center text-muted mb-6">This link will be permanently deleted. This action cannot be undone.</p>
+            <div class="flex justify-center gap-4">
+                <button id="cancel-delete-btn" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-delete-btn" class="btn btn-danger">Delete</button>
             </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const STAND_BOT_CONFIG = {
-                BIN_ID: '68b4029243b1c97be931d983',
-                API_KEY: '$2a$10$OWB0wBTxocZeAjW4yY5pyOQwnVSUr5a3bovRM9LZM5NJI8zpiT3eS',
-            };
-            const LINK_TRACKER_CONFIG = {
-                API_KEY: "$2a$10$KXx5Yb2HF6z292WnEjQcY.P/WggIJ9sbwMXyhT9UmzFPtlyavGGlK",
-                BIN_ID: "6877dbaf3052b733d10d94bc",
-                DOMAIN: "https://modelmschief.github.io/404_check/",
-            };
-
-            const views = { standBot: document.getElementById('stand-bot-view'), linkTracker: document.getElementById('link-tracker-view') };
-            const nav = { standBot: document.querySelectorAll('.stand-bot-nav'), mobileStandBot: document.querySelectorAll('.mobile-stand-bot-nav'), userDisplay: document.getElementById('user-display'), logoutButton: document.getElementById('logout-button') };
-            const viewBtns = { home: document.getElementById('home-view-btn'), tracker: document.getElementById('tracker-view-btn'), mobileTracker: document.getElementById('mobile-tracker-view-btn'), trackerCard: document.getElementById('tracker-feature-card'), ctaTrackLink: document.getElementById('ctaTrackLink') };
-            const login = { section: document.getElementById('login-section'), button: document.getElementById('login-button'), input: document.getElementById('user-id'), error: document.getElementById('login-error') };
-            const dashboard = { section: document.getElementById('dashboard-section'), createBtn: document.getElementById('create-link-button'), linkInput: document.getElementById('original-link'), newLinkDisplay: document.getElementById('new-link-display'), newLinkInput: document.getElementById('new-short-link') };
-            const mobileMenu = { menu: document.getElementById('mobile-menu'), panel: document.querySelector('#mobile-menu > div'), openBtn: document.getElementById('mobile-menu-button'), closeBtn: document.getElementById('close-mobile-menu') };
-            const modal = { container: document.getElementById('confirmation-modal'), confirmBtn: document.getElementById('confirm-delete-btn'), cancelBtn: document.getElementById('cancel-delete-btn') };
-            const spinner = document.getElementById('loading-spinner');
-            let clicksChart = null;
-            let currentUserId = null;
-            let linkToDelete = null;
-
-            const themeToggle = document.getElementById('themeToggle');
-            const sunIcon = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>`;
-            const moonIcon = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
-            const isDark = localStorage.getItem('theme') !== 'light';
-            if (isDark) { document.documentElement.classList.add('dark'); themeToggle.innerHTML = sunIcon; } else { themeToggle.innerHTML = moonIcon; }
-            themeToggle.addEventListener('click', () => {
-                const isDarkNow = document.documentElement.classList.toggle('dark');
-                localStorage.setItem('theme', isDarkNow ? 'dark' : 'light');
-                themeToggle.innerHTML = isDarkNow ? sunIcon : moonIcon;
-            });
-
-            function openMenu() { mobileMenu.menu.classList.remove('hidden'); setTimeout(() => mobileMenu.panel.classList.remove('translate-x-full'), 10); }
-            function closeMenu() { mobileMenu.panel.classList.add('translate-x-full'); setTimeout(() => mobileMenu.menu.classList.add('hidden'), 300); }
-            mobileMenu.openBtn.addEventListener('click', openMenu);
-            mobileMenu.closeBtn.addEventListener('click', closeMenu);
-            mobileMenu.menu.addEventListener('click', (e) => { if (e.target === mobileMenu.menu) closeMenu(); });
-
-            function switchView(viewName) {
-                Object.values(views).forEach(v => v.classList.add('hidden'));
-                views[viewName].classList.remove('hidden');
-                localStorage.setItem('activeView', viewName);
-                const isTracker = viewName === 'linkTracker';
-                [...nav.standBot, ...nav.mobileStandBot].forEach(el => el.style.display = isTracker ? 'none' : 'block');
-                nav.userDisplay.classList.toggle('hidden', !isTracker || !currentUserId);
-                nav.logoutButton.classList.toggle('hidden', !isTracker || !currentUserId);
-                closeMenu();
-            }
-
-            async function fetchData(config) {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${config.BIN_ID}/latest`, { headers: { 'X-Master-Key': config.API_KEY } });
-                if (!res.ok) throw new Error('Could not fetch data.');
-                return (await res.json()).record || {};
-            }
-
-            async function updateData(config, newData) {
-                await fetch(`https://api.jsonbin.io/v3/b/${config.BIN_ID}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': config.API_KEY },
-                    body: JSON.stringify(newData)
-                });
-            }
-            
-            // --- FIXED: ROBUST PROMOTER BOT ANALYTICS LOGGER ---
-            async function logPromoterBotEvent(eventName) {
-                 if (STAND_BOT_CONFIG.BIN_ID.includes('YOUR_') || STAND_BOT_CONFIG.API_KEY.includes('YOUR_')) {
-                    console.warn('Promoter Bot JSONBin ID/API Key not configured. Logging is disabled.');
-                    return;
-                }
-                const payload = { ts: new Date().toISOString(), event: eventName, ua: navigator.userAgent };
-                try {
-                    const getResponse = await fetch(`https://api.jsonbin.io/v3/b/${STAND_BOT_CONFIG.BIN_ID}/latest`, {
-                        headers: { 'X-Master-Key': STAND_BOT_CONFIG.API_KEY }
-                    });
-                    let currentData = { events: [] };
-                    if (getResponse.ok) {
-                        const latestRecord = await getResponse.json();
-                        if (latestRecord.record && Array.isArray(latestRecord.record.events)) {
-                            currentData = latestRecord.record;
-                        }
-                    } else if (getResponse.status !== 404) {
-                        console.warn(`JSONBin (Promoter): Failed to GET latest bin. Status: ${getResponse.status}`);
-                    }
-                    currentData.events.push(payload);
-                    await updateData(STAND_BOT_CONFIG, currentData);
-                } catch (error) {
-                    console.warn('Promoter Bot logging failed:', error);
-                }
-            }
-
-            // --- LINK TRACKER LOGIC ---
-            function showSpinner(show) { spinner.classList.toggle('hidden', !show); }
-
-            async function loginUser(userId) {
-                showSpinner(true);
-                login.error.textContent = '';
-                try {
-                    localStorage.setItem('loggedInUserId', userId);
-                    currentUserId = userId;
-                    await refreshDashboard();
-                } catch (e) {
-                    login.error.textContent = `Error: ${e.message}`;
-                } finally {
-                    showSpinner(false);
-                }
-            }
-            
-            async function refreshDashboard() {
-                 if (!currentUserId) return;
-                 showSpinner(true);
-                 try {
-                    const allData = await fetchData(LINK_TRACKER_CONFIG);
-                    displayDashboard(currentUserId, allData);
-                 } catch(e) {
-                    alert('Could not refresh data.');
-                 } finally {
-                    showSpinner(false);
-                 }
-            }
-
-            function displayDashboard(userId, allData) {
-                nav.userDisplay.textContent = `User: ${userId}`;
-                nav.userDisplay.classList.remove('hidden');
-                nav.logoutButton.classList.remove('hidden');
-                login.section.classList.add('hidden');
-                dashboard.section.classList.remove('hidden');
-                const userLinks = Object.entries(allData).filter(([_, v]) => v && v.owner_id === userId).map(([k, v]) => ({ short_code: k, ...v }));
-                renderStats(userLinks);
-                renderChart(userLinks);
-                renderTable(userLinks);
-            }
-
-            function renderStats(links) {
-                document.getElementById('total-links').textContent = links.length;
-                document.getElementById('total-clicks').textContent = links.reduce((s, l) => s + (l.clicks || 0), 0);
-            }
-            
-            function renderChart(links) {
-                const sorted = [...links].sort((a, b) => (b.clicks || 0) - (a.clicks || 0)).slice(0, 5);
-                const ctx = document.getElementById('clicks-chart').getContext('2d');
-                if(clicksChart) clicksChart.destroy();
-                clicksChart = new Chart(ctx, { type: 'bar', data: { labels: sorted.map(l => l.short_code), datasets: [{ label: 'Clicks', data: sorted.map(l => l.clicks || 0), backgroundColor: 'rgba(99, 102, 241, 0.6)' }] }, options: { indexAxis: 'y' } });
-            }
-
-            function renderTable(links) {
-                const tableBody = document.getElementById('links-table-body');
-                const trashIcon = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
-                tableBody.innerHTML = links.length === 0 ? `<tr><td colspan="5" class="text-center py-8 text-slate-500">No links created yet.</td></tr>` : links.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(link => {
-                    const shortUrl = `${LINK_TRACKER_CONFIG.DOMAIN}${link.short_code}`;
-                    return `<tr>
-                                <td class="px-6 py-4"><a href="${shortUrl}" target="_blank" class="text-indigo-500 font-medium">${shortUrl}</a></td>
-                                <td class="px-6 py-4 max-w-xs truncate">${link.original_link}</td>
-                                <td class="px-6 py-4 font-semibold">${link.clicks || 0}</td>
-                                <td class="px-6 py-4 text-sm">${new Date(link.created_at).toLocaleDateString()}</td>
-                                <td class="px-6 py-4"><button class="delete-btn p-2 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50" data-short-code="${link.short_code}">${trashIcon}</button></td>
-                            </tr>`;
-                }).join('');
-            }
-            
-            async function createNewLink() {
-                const originalLink = dashboard.linkInput.value.trim();
-                if (!originalLink || !currentUserId) return alert('Please enter a valid URL.');
-                showSpinner(true);
-                try {
-                    const allData = await fetchData(LINK_TRACKER_CONFIG);
-                    const shortCode = Math.random().toString(36).substring(2, 8);
-                    allData[shortCode] = { original_link: originalLink, owner_id: currentUserId, created_at: new Date().toISOString(), clicks: 0 };
-                    await updateData(LINK_TRACKER_CONFIG, allData);
-                    dashboard.linkInput.value = '';
-                    dashboard.newLinkInput.value = `${LINK_TRACKER_CONFIG.DOMAIN}${shortCode}`;
-                    dashboard.newLinkDisplay.classList.remove('hidden');
-                    await refreshDashboard();
-                } catch(e) { alert(`Error: ${e.message}`); } 
-                finally { showSpinner(false); }
-            }
-            
-            function showDeleteModal(shortCode) { linkToDelete = shortCode; modal.container.classList.remove('hidden'); }
-            function hideDeleteModal() { linkToDelete = null; modal.container.classList.add('hidden'); }
-
-            async function deleteLink() {
-                if (!linkToDelete) return;
-                hideDeleteModal();
-                showSpinner(true);
-                try {
-                    const allData = await fetchData(LINK_TRACKER_CONFIG);
-                    if (allData[linkToDelete]) {
-                        delete allData[linkToDelete];
-                        await updateData(LINK_TRACKER_CONFIG, allData);
-                    }
-                    await refreshDashboard();
-                } catch (e) {
-                    alert(`Error deleting link: ${e.message}`);
-                } finally {
-                    showSpinner(false);
-                }
-            }
-
-            function logoutUser() {
-                localStorage.removeItem('loggedInUserId');
-                currentUserId = null;
-                dashboard.section.classList.add('hidden');
-                login.section.classList.remove('hidden');
-                nav.userDisplay.classList.add('hidden');
-                nav.logoutButton.classList.add('hidden');
-                login.input.value = '';
-            }
-            
-            // --- EVENT LISTENERS ---
-            logPromoterBotEvent('visit');
-            document.getElementById('ctaStart').addEventListener('click', () => logPromoterBotEvent('click_start'));
-            document.getElementById('ctaClone').addEventListener('click', () => logPromoterBotEvent('click_clone'));
-            document.getElementById('ctaGroup').addEventListener('click', () => logPromoterBotEvent('click_add_group'));
-            document.getElementById('ctaPremium').addEventListener('click', () => logPromoterBotEvent('click_premium_support'));
-            
-            viewBtns.home.addEventListener('click', () => switchView('standBot'));
-            viewBtns.tracker.addEventListener('click', () => switchView('linkTracker'));
-            viewBtns.mobileTracker.addEventListener('click', () => switchView('linkTracker'));
-            viewBtns.trackerCard.addEventListener('click', () => switchView('linkTracker'));
-            viewBtns.ctaTrackLink.addEventListener('click', () => switchView('linkTracker'));
-            login.button.addEventListener('click', () => { if (login.input.value.trim()) loginUser(login.input.value.trim()); });
-            dashboard.createBtn.addEventListener('click', createNewLink);
-            nav.logoutButton.addEventListener('click', logoutUser);
-            document.getElementById('links-table-body').addEventListener('click', (e) => {
-                const button = e.target.closest('.delete-btn');
-                if (button) showDeleteModal(button.dataset.shortCode);
-            });
-            modal.confirmBtn.addEventListener('click', deleteLink);
-            modal.cancelBtn.addEventListener('click', hideDeleteModal);
-
-            const savedView = localStorage.getItem('activeView') || 'standBot';
-            const savedUserId = localStorage.getItem('loggedInUserId');
-            switchView(savedView);
-            if (savedView === 'linkTracker' && savedUserId) {
-                login.input.value = savedUserId;
-                loginUser(savedUserId);
-            }
-        });
-    </script>
+    <script src="js/background.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
-
