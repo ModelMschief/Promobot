@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms & Conditions - Promoter Bot</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display-swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Palette - Dark Mode (Default) */
+            --bg-color: #0f172a;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.05);
+            --accent-primary: #6366f1; /* Indigo */
+            --accent-secondary: #06b6d4; /* Cyan */
+            --accent-gradient: linear-gradient(135deg, #6366f1, #06b6d4);
+
+            --nav-bg: rgba(15, 23, 42, 0.8);
+            --pill-radius: 50px;
+        }
+
+        /* Light Mode Overrides */
+        html:not(.dark) {
+            --bg-color: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --glass-highlight: rgba(255, 255, 255, 0.4);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 900px;
+            height: 60px;
+            z-index: 100;
+            border-radius: var(--pill-radius);
+            background: var(--nav-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .logo { font-size: 1.25rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .back-link { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .back-link:hover { color: var(--text-primary); }
+
+        main {
+            max-width: 800px;
+            margin: 140px auto 60px;
+            padding: 0 20px;
+        }
+
+        .content-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+        }
+
+        html:not(.dark) .content-card {
+             background: rgba(255, 255, 255, 0.6);
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 30px; }
+        h2 { font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px; color: var(--accent-primary); }
+        p { line-height: 1.8; color: var(--text-secondary); margin-bottom: 15px; }
+        ul { margin-left: 20px; margin-bottom: 20px; color: var(--text-secondary); line-height: 1.8; }
+
+        .legal-notice {
+            border-left: 4px solid var(--accent-primary);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <header>
+        <a href="index.html" class="logo">Promoter Bot</a>
+        <a href="index.html" class="back-link">← Back to App</a>
+    </header>
+
+    <main>
+        <div class="content-card">
+            <h1>Terms & Conditions</h1>
+            <p>Last updated: October 2025</p>
+
+            <div class="legal-notice">
+                "Don't share any illegal or explicit content through bot. The terms and conditions is an addition lot of info which is in additional page."
+            </div>
+
+            <h2>1. Introduction</h2>
+            <p>Welcome to Promoter Bot. By using our bot and services, you agree to these Terms and Conditions. Please read them carefully.</p>
+
+            <h2>2. User Responsibilities</h2>
+            <p>You agree to use the service only for lawful purposes. You are strictly prohibited from:</p>
+            <ul>
+                <li>Distributing malware, viruses, or harmful code.</li>
+                <li>Sharing explicit, adult, or illegal content.</li>
+                <li>Engaging in harassment or hate speech.</li>
+                <li>Attempting to exploit or bypass the bot's credit system.</li>
+            </ul>
+
+            <h2>3. Service Availability</h2>
+            <p>We strive to ensure the bot is available 24/7. However, we do not guarantee uninterrupted access and are not liable for any downtime or data loss.</p>
+
+            <h2>4. Payments & Refunds</h2>
+            <p>All purchases for premium features are final. Refunds are only issued at the sole discretion of the administration in cases of technical failure.</p>
+
+            <h2>5. Link Tracking</h2>
+            <p>Our Link Tracker feature is provided as-is. We reserve the right to delete any links that violate our content policies without prior notice.</p>
+
+            <h2>6. Changes to Terms</h2>
+            <p>We may update these terms at any time. Continued use of the service constitutes acceptance of the new terms.</p>
+        </div>
+    </main>
+
+    <script>
+        // Simple Canvas Logic (Same as index)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-secondary');
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+                particles.forEach(p2 => {
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 150) {
+                        ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--glass-border');
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Dark/Light Theme Check (Simple)
+        const isDark = localStorage.getItem('theme') !== 'light';
+        if (isDark) document.documentElement.classList.add('dark');
+    </script>
+</body>
+</html>
